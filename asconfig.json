@@ -32,20 +32,24 @@
         // 源代码路径，用于 VSCode 代码支持提示，通常内容是和 include-sources 相同
         "source-path": [
             "src",
+
             "lib/Flash/src",
             "lib/ActionBSON/src",
             "lib/easy_lua/src",
             "lib/fzip/src",
-            "lib/as3xls/src"
+            "lib/as3xls/src",
+            "lib/tweener/src"
         ],
         // 包含路径，用于编译时即使没有引用到的路径下的库也进行导入
         "include-sources": [
             "src",
+
             "lib/Flash/src",
             "lib/ActionBSON/src",
             "lib/easy_lua/src",
             "lib/fzip/src",
-            "lib/as3xls/src"
+            "lib/as3xls/src",
+            "lib/tweener/src"
         ],
         // 包含类路径，用于编译时即使没有引用到的相关类也进行导入
         "include-classes": [
