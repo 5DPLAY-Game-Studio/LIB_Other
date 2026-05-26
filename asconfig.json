@@ -32,12 +32,14 @@
         // 源代码路径，用于 VSCode 代码支持提示，通常内容是和 include-sources 相同
         "source-path": [
             "src",
-            "lib/flash"
+            "lib/flash",
+            "lib/ActionBSON/src"
         ],
         // 包含路径，用于编译时即使没有引用到的路径下的库也进行导入
         "include-sources": [
             "src",
-            "lib/flash"
+            "lib/flash",
+            "lib/ActionBSON/src"
         ],
         // 包含类路径，用于编译时即使没有引用到的相关类也进行导入
         "include-classes": [
