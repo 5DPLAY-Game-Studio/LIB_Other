@@ -38,7 +38,8 @@
             "lib/easy_lua/src",
             "lib/fzip/src",
             "lib/as3xls/src",
-            "lib/tweener/src"
+            "lib/tweener/src",
+            "lib/ASZip/src"
         ],
         // 包含路径，用于编译时即使没有引用到的路径下的库也进行导入
         "include-sources": [
@@ -49,7 +50,8 @@
             "lib/easy_lua/src",
             "lib/fzip/src",
             "lib/as3xls/src",
-            "lib/tweener/src"
+            "lib/tweener/src",
+            "lib/ASZip/src"
         ],
         // 包含类路径，用于编译时即使没有引用到的相关类也进行导入
         "include-classes": [

@@ -29,6 +29,7 @@
       <sourceFolder url="file://$MODULE_DIR$/lib/Flash/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lib/as3xls/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lib/tweener/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/ASZip/src" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="flex4.16.1-air51.0.1.1" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
