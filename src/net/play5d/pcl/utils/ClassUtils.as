@@ -23,113 +23,131 @@ import flash.utils.Dictionary;
 import flash.utils.describeType;
 import flash.utils.getQualifiedClassName;
 
+/**
+ * 类反射与路径访问工具。
+ *
+ * <p>提供公开属性枚举、事件处理方法探测、嵌套路径访问等；
+ * <code>describeType</code> 结果按类缓存。</p>
+ *
+ * @see #getClassProperty()
+ * @see #continuousAccess()
+ */
 public class ClassUtils {
 
+    /** @private <code>flash.events.Event</code> 限定名 */
+    private static const EVENT_QNAME:String = 'flash.events.Event';
+
+    /** @private Class → 公开变量名列表 */
+    private static var _propCache:Dictionary        = new Dictionary(true);
+    /** @private 限定类名 → 本类声明的 Event 处理方法名 */
+    private static var _eventMethodCache:Dictionary = new Dictionary();
+    /** @private 路径 key → 预编译访问器 */
+    private static var _pathCache:Dictionary        = new Dictionary();
+
     /**
-     * 获得某个类的所有公开属性
-     * @param cls 类
-     * @return
+     * 获得类的公开实例变量名（不含访问器）。
+     * @param cls 类；为 <code>null</code> 则返回 <code>null</code>。
+     * @return 属性名数组；无则空数组。
+     * @example
+     * <listing version="3.0">
+     * var keys:Array = ClassUtils.getClassProperty(HitVO);
+     * </listing>
      */
     public static function getClassProperty(cls:Class):Array {
         if (!cls) {
             return null;
         }
 
-        var publicKey:Array = [];
-
-        var clsXml:XML;
-        var variables:XMLList;
-        try {
-            clsXml    = describeType(cls);
-            variables = clsXml.factory.variable;
-        }
-        catch (e:Error) {
-            trace('转换失败！');
+        var cached:Array = _propCache[cls] as Array;
+        if (cached) {
+            return cached;
         }
 
-        if (variables == null) {
-            return null;
+        var keys:Array      = [];
+        var variables:XMLList = describeFactoryVariables(cls);
+        if (variables) {
+            for each (var varXml:XML in variables) {
+                keys.push(String(varXml.@name));
+            }
         }
 
-        for each(var varXml:XML in variables) {
-            var name:String = varXml.@name;
-            publicKey.push(name);
-        }
-
-        //trace(publicKey);
-        return publicKey;
+        _propCache[cls] = keys;
+        return keys;
     }
 
     /**
-     * 获得某个值对象的类名
-     * @param value 值对象
-     * @return
+     * 获得值的限定类名。
+     * @param value 任意值。
+     * @return 限定名；<code>value</code> 为 <code>null</code> 则为 <code>null</code>。
+     * @example
+     * <listing version="3.0">
+     * ClassUtils.getClassName(sprite); // 'flash.display::Sprite'
+     * </listing>
      */
     public static function getClassName(value:*):String {
         if (value == null) {
             return null;
         }
-
         return getQualifiedClassName(value);
     }
 
     /**
-     * 获得某个值对象的所有定义的 Event 事件
-     * @param value 值对象
-     * @return event 事件组
+     * 获得实例上由本类声明、且仅接受一个 <code>Event</code> 参数的方法名。
+     *
+     * <p>不含继承方法；参数类型须为 <code>flash.events.Event</code>（不含子类签名）。</p>
+     *
+     * @param value 实例；为 <code>null</code> 则返回 <code>null</code>。
+     * @return 方法名数组；无则空数组。
+     * @example
+     * <listing version="3.0">
+     * var names:Array = ClassUtils.getClassEventMethod(view);
+     * </listing>
+     * @see #removeAllEventListener()
      */
     public static function getClassEventMethod(value:*):Array {
         if (value == null) {
             return null;
         }
 
-        // 事件函数
+        var qname:String = getQualifiedClassName(value);
+        var cached:Array = _eventMethodCache[qname] as Array;
+        if (cached) {
+            return cached;
+        }
+
         var eventFuncs:Array = [];
+        var methods:XMLList  = describeInstanceMethods(value);
+        if (methods) {
+            for each (var methodXml:XML in methods) {
+                if (String(methodXml.@declaredBy) != qname) {
+                    continue;
+                }
 
-        var clsXml:XML;
-        var methods:XMLList;
-        try {
-            clsXml  = describeType(value);
-            methods = clsXml.method;
-        }
-        catch (e:Error) {
-            trace('转换失败！');
-        }
+                var parameters:XMLList = methodXml.parameter;
+                if (parameters.length() != 1) {
+                    continue;
+                }
+                if (String(parameters[0].@type) != EVENT_QNAME) {
+                    continue;
+                }
 
-        if (methods == null) {
-            return null;
-        }
-
-        var className:String = getClassName(value);
-        var eventName:String = getClassName(Event);
-
-        for each (var methodXml:XML in methods) {
-            var declaredBy:String = methodXml.@declaredBy;
-            if (declaredBy != className) {
-                continue;
-            }
-
-            var parameters:XMLList = methodXml.parameter;
-            if (parameters.length() != 1) {
-                continue;
-            }
-
-            var parameter:XML        = parameters[0];
-            var parameterType:String = parameter.@type;
-
-            if (parameterType == eventName) {
-                var name:String = methodXml.@name;
-                eventFuncs.push(name);
+                eventFuncs.push(String(methodXml.@name));
             }
         }
 
+        _eventMethodCache[qname] = eventFuncs;
         return eventFuncs;
     }
 
     /**
-     * 移除显示对象的所有 EnterFrame 事件
-     * @param d 显示对象
-     * @param back 回调函数，需要一个参数 eventName:String
+     * 移除显示对象上、由本类 Event 处理方法注册的全部 <code>ENTER_FRAME</code> 监听。
+     * @param d 显示对象。
+     * @param back 每成功移除一个时回调，参数为方法名 <code>String</code>。
+     * @example
+     * <listing version="3.0">
+     * ClassUtils.removeAllEventListener(mc);
+     * </listing>
+     * @see #getClassEventMethod()
      */
     public static function removeAllEventListener(d:DisplayObject, back:Function = null):void {
         if (d == null || !d.hasEventListener(Event.ENTER_FRAME)) {
@@ -137,13 +155,17 @@ public class ClassUtils {
         }
 
         var eventMethods:Array = getClassEventMethod(d);
-        if (eventMethods == null) {
+        if (!eventMethods || eventMethods.length == 0) {
             return;
         }
 
         for each (var eventName:String in eventMethods) {
+            if (!d.hasEventListener(Event.ENTER_FRAME)) {
+                break;
+            }
+
             var eventFunc:Function = d[eventName] as Function;
-            if (eventFunc == null || !d.hasEventListener(Event.ENTER_FRAME)) {
+            if (eventFunc == null) {
                 continue;
             }
 
@@ -154,20 +176,19 @@ public class ClassUtils {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
-
     /**
-     * 路径访问器缓存
-     * key: 路径数组的字符串表示
-     * value: 预编译的访问函数
-     */
-    private static var _pathCache:Dictionary = new Dictionary(true);
-    
-    /**
-     * 连续访问对象的嵌套属性或方法（优化版）
-     * @param begin 起始对象
-     * @param list 属性/方法路径数组，方法以 "()" 结尾
-     * @return 访问路径末端的对象，访问失败返回 null
+     * 按路径连续访问嵌套属性或无参方法。
+     *
+     * <p>方法节点以 <code>()</code> 结尾。相同路径会编译并缓存访问器。</p>
+     *
+     * @param begin 起始对象。
+     * @param list 路径段；为 <code>null</code> 或空则返回 <code>begin</code>。
+     * @return 末端值；中途为 <code>null</code>/<code>undefined</code> 则返回 <code>null</code>。
+     * @example
+     * <listing version="3.0">
+     * var text:* = ClassUtils.continuousAccess(lang, ['menu', 'start']);
+     * var child:* = ClassUtils.continuousAccess(root, ['getChildAt()', 'name']);
+     * </listing>
      */
     public static function continuousAccess(begin:*, list:Array = null):* {
         if (begin == null) {
@@ -177,57 +198,57 @@ public class ClassUtils {
             return begin;
         }
 
-        // 尝试从缓存获取预编译的访问器
-        var cacheKey:String = list.join(',');
-        var accessor:Function = _pathCache[cacheKey];
-        
-        // 缓存中存在，直接返回结果
-        if (accessor != null) {
-            return accessor(begin);
+        var cacheKey:String   = list.join(',');
+        var accessor:Function = _pathCache[cacheKey] as Function;
+        if (accessor == null) {
+            accessor             = compileAccessor(list);
+            _pathCache[cacheKey] = accessor;
         }
-
-        // 缓存中不存在，编译访问器函数并缓存
-        accessor = _compileAccessor(list);
-        _pathCache[cacheKey] = accessor;
-        
         return accessor(begin);
     }
 
-    /**
-     * 编译路径数组为高效的访问器函数
-     * @param list 属性/方法路径数组
-     * @return 编译后的访问函数
-     */
-    private static function _compileAccessor(list:Array):Function {
-        var len:int = list.length;
+    /** @private 读取 Class 的 factory.variable */
+    private static function describeFactoryVariables(cls:Class):XMLList {
+        try {
+            return describeType(cls).factory.variable;
+        }
+        catch (e:Error) {
+        }
+        return null;
+    }
+
+    /** @private 读取实例的 method 列表 */
+    private static function describeInstanceMethods(value:*):XMLList {
+        try {
+            return describeType(value).method;
+        }
+        catch (e:Error) {
+        }
+        return null;
+    }
+
+    /** @private 将路径编译为访问闭包链 */
+    private static function compileAccessor(list:Array):Function {
         var accessors:Array = [];
-        
+        var len:int         = list.length;
+
         for (var i:int = 0; i < len; i++) {
-            var node:String = list[i];
-            var isMethod:Boolean = node.length > 2 && 
-                                   node.charCodeAt(node.length - 2) == 40 &&  // '('
-                                   node.charCodeAt(node.length - 1) == 41;    // ')'
-            
-            if (isMethod) {
-                var methodName:String = node.substring(0, node.length - 2);
-                // 使用闭包捕获方法名
-                accessors.push(_createMethodAccessor(methodName));
-            } else {
-                // 使用闭包捕获属性名
-                accessors.push(_createPropertyAccessor(node));
+            var node:String = String(list[i]);
+            if (isMethodNode(node)) {
+                accessors.push(createMethodAccessor(node.substring(0, node.length - 2)));
+            }
+            else {
+                accessors.push(createPropertyAccessor(node));
             }
         }
-        
-        // 返回组合后的访问函数
-        return function(root:*):* {
+
+        return function (root:*):* {
             var current:* = root;
             for each (var func:Function in accessors) {
                 if (current == null) {
                     return null;
                 }
-
                 current = func(current);
-                
                 if (current == null) {
                     return null;
                 }
@@ -236,22 +257,28 @@ public class ClassUtils {
         };
     }
 
-    /**
-     * 创建属性访问器
-     */
-    private static function _createPropertyAccessor(name:String):Function {
-        return function(obj:*):* {
+    /** @private 路径段是否为无参方法调用（以 () 结尾） */
+    private static function isMethodNode(node:String):Boolean {
+        return node.length > 2 && node.substr(-2) == '()';
+    }
+
+    /** @private */
+    private static function createPropertyAccessor(name:String):Function {
+        return function (obj:*):* {
             return obj[name];
         };
     }
 
-    /**
-     * 创建方法访问器
-     */
-    private static function _createMethodAccessor(name:String):Function {
-        return function(obj:*):* {
-            return obj[name] ? obj[name]() : null;
+    /** @private */
+    private static function createMethodAccessor(name:String):Function {
+        return function (obj:*):* {
+            var m:* = obj[name];
+            if (m is Function) {
+                return (m as Function)();
+            }
+            return null;
         };
     }
+
 }
 }
