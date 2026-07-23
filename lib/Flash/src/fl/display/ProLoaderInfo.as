@@ -53,7 +53,7 @@ package fl.display {
 		/**
 		 * @private
 		 */
-		var _lcRequestedContentParentSet:Boolean;
+		internal var _lcRequestedContentParentSet:Boolean;
 
 		/**
 		 * it is never useful to create a ProLoaderInfo directly. It should always
