@@ -236,7 +236,7 @@ package com.remesch.easyLua
     }
 
     protected function stringToAs3(index:int):String {
-      return Lua.lua_tolstring(_luaState, index, null);
+      return Lua.lua_tolstring(_luaState, index, 0);
     }
 
     protected function booleanToAs3(index):Boolean {
