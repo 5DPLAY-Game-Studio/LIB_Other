@@ -164,7 +164,7 @@ package fl.display {
 		/**
 		 * @private
 		 */
-		function loadDoneCallback(d:DisplayObject):Boolean
+		internal function loadDoneCallback(d:DisplayObject):Boolean
 		{
 			// called by ProLoaderInfo when the content is ready and before the events
 			// are dispatched. Returns false if load was cancelled

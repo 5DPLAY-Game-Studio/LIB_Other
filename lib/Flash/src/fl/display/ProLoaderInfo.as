@@ -86,7 +86,7 @@ package fl.display {
 		/**
 		 * @private
 		 */
-		function reset():void
+		internal function reset():void
 		{
 			_realContentLI = null;
 			_rslPreloaderLoaded = false;
@@ -457,7 +457,7 @@ package fl.display {
 		/**
 		 * @private
 		 */
-		public function set parentSandboxBridge(value:Object)
+		public function set parentSandboxBridge(value:Object):void
 		{
 			if (_realContentLI != null) {
 				_realContentLI["parentSandboxBridge"] = value;
@@ -665,7 +665,7 @@ package fl.display {
 		/**
 		 * @private
 		 */
-		function set realContentLoaderInfo(value:LoaderInfo):void
+		internal function set realContentLoaderInfo(value:LoaderInfo):void
 		{
 			_realContentLI = value;
 			_realContentLI.addEventListener(Event.COMPLETE, handleRealContentEvent, false, 0, true);
@@ -695,7 +695,7 @@ package fl.display {
 		/**
 		 * @private
 		 */
-		function get realContentLoaderInfo():LoaderInfo
+		internal function get realContentLoaderInfo():LoaderInfo
 		{
 			return _realContentLI;
 		}
