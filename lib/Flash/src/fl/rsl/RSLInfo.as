@@ -360,7 +360,7 @@ package fl.rsl {
 		/**
 		 * @private
 		 */
-		protected function handleProgress(e:ProgressEvent)
+		protected function handleProgress(e:ProgressEvent):void
 		{
 			dispatchEvent(e);
 		}
