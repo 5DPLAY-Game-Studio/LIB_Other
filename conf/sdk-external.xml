@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright (C) 2021-2026, 5DPLAY Game Studio
+  ~ All rights reserved.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<!--
+  Shared fragment for library modules (bat / IDEA additionalOptions).
+  Append Flex/AIR/MX onto external-library-path so library SWCs do not merge
+  mx.* (same intent as asconfig.json). MUST use append="true": without it,
+  load-config+= replaces the whole list and drops IDEA/bat paths such as
+  shared/lib/swc. Also never clear library-path (IDEA Merged module SWCs).
+  ${flexlib} = SDK frameworks directory.
+-->
+<flex-config>
+	<compiler>
+		<external-library-path append="true">
+			<path-element>${flexlib}/libs</path-element>
+			<path-element>${flexlib}/libs/air</path-element>
+			<path-element>${flexlib}/libs/mx</path-element>
+		</external-library-path>
+	</compiler>
+</flex-config>

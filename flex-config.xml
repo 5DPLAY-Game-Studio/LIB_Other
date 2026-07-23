@@ -18,8 +18,9 @@
   -->
 
 <!--
-  Keep in sync with asconfig.json. Paths relative to this module root.
-  Flex/AIR/MX via tools/script/sdk-external.xml (build.bat / IDEA).
+  与 asconfig.json 保持同步。路径相对于此模块根目录。
+  Flex/AIR/MX external：独立工程用 conf/sdk-external.xml；主工程子模块用
+  ../tools/script/conf/sdk-external.xml（build.bat / 根目录 iml）。
 -->
 <flex-config>
 	<!-- 编译器选项 -->
