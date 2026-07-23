@@ -312,7 +312,7 @@ public class Locale extends flash.events.EventDispatcher
      * @helpid 
      * @category Method
      */
-	public static function addDelayedInstance(instance:Object, stringID:String) {
+	public static function addDelayedInstance(instance:Object, stringID:String):void {
 		if (instance.hasOwnProperty("text")) {
 			delayedInstanceDict[instance] = stringID;
 		} else if (instance.hasOwnProperty("parent") && instance.parent is DisplayObjectContainer && instance.hasOwnProperty("instanceName")) {
