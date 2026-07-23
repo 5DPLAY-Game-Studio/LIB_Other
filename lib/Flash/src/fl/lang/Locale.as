@@ -600,7 +600,7 @@ public class Locale extends flash.events.EventDispatcher
 	//* private methods
 	//******************************************/
 
-	private static function loadXML(langCode:String) {
+	private static function loadXML(langCode:String):void {
 		var xmlURL:String = xmlMap[langCode][0];
 		var myLoader:URLLoader = new URLLoader(new URLRequest(xmlURL));
 		myLoader.addEventListener("complete", onXMLLoad);
