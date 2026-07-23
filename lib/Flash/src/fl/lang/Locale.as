@@ -396,7 +396,7 @@ public class Locale extends flash.events.EventDispatcher
      * @helpid 
      * @category Method
      */
-    public static function setLoadCallback(loadCallback:Function) {
+    public static function setLoadCallback(loadCallback:Function):void {
 		callback = loadCallback;
 	}
 
