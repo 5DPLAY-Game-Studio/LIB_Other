@@ -659,7 +659,7 @@ public class AnimatorBase extends EventDispatcher
 	public function get targetParentButton():SimpleButton {
 		return _targetParentBtn;
 	}
-	public function set targetParentButton(p:SimpleButton) {
+	public function set targetParentButton(p:SimpleButton):void {
 		_targetParentBtn = p;
 	}
 	
