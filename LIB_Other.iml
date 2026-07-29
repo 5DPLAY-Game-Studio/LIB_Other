@@ -37,6 +37,7 @@
       <sourceFolder url="file://$MODULE_DIR$/lib/nochump-util-zip-optimized/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lib/as3wavsound/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lib/minimalcomps/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/starling/src" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="flex4.16.1-air51.0.1.1" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />

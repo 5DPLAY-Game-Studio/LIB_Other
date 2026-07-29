@@ -44,7 +44,8 @@
             "lib/GZIPEncoder/src",
             "lib/nochump-util-zip-optimized/src",
             "lib/as3wavsound/src",
-            "lib/minimalcomps/src"
+            "lib/minimalcomps/src",
+            "lib/starling/src"
         ],
         // 包含路径，用于编译时即使没有引用到的路径下的库也进行导入
         "include-sources": [
@@ -61,7 +62,8 @@
             "lib/GZIPEncoder/src",
             "lib/nochump-util-zip-optimized/src",
             "lib/as3wavsound/src",
-            "lib/minimalcomps/src"
+            "lib/minimalcomps/src",
+            "lib/starling/src"
         ],
         // 包含类路径，用于编译时即使没有引用到的相关类也进行导入
         "include-classes": [

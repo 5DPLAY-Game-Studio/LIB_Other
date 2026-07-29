@@ -44,6 +44,7 @@
 			<path-element>lib/nochump-util-zip-optimized/src</path-element>
 			<path-element>lib/as3wavsound/src</path-element>
 			<path-element>lib/minimalcomps/src</path-element>
+			<path-element>lib/starling/src</path-element>
 		</source-path>
 		
 		<!-- 库文件的三种链接方式：Merged、External 和 Include -->
@@ -77,6 +78,7 @@
 		<path-element>lib/nochump-util-zip-optimized/src</path-element>
 		<path-element>lib/as3wavsound/src</path-element>
 		<path-element>lib/minimalcomps/src</path-element>
+		<path-element>lib/starling/src</path-element>
 	</include-sources>
 	
 	<!-- 包含类路径，用于编译时即使没有引用到的相关类也进行导入 -->
