@@ -72,15 +72,15 @@ package com.probertson.utils
 			{
 				makeCRCTable();
 			}
-			var result:uint = ~0;
+			var result:uint = 0xffffffff;
 			var len:int = buffer.length;
 			for (var i:int = 0; i < len; i++)
 			{
 				result = _crcTable[(result ^ buffer[i]) & 0xff] ^ (result >>> 8);
 			}
-			result = ~result;
+			result ^= 0xffffffff;
 			
-			return (result & 0xffffffff);
+			return result;
 		}
 	}
 }

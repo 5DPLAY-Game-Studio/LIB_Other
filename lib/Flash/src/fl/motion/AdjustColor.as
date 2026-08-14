@@ -161,7 +161,7 @@ package fl.motion
      */
 		public function AllValuesAreSet():Boolean
 		{
-			return (m_brightnessMatrix && m_contrastMatrix && m_saturationMatrix && m_hueMatrix);
+			return (m_brightnessMatrix != null && m_contrastMatrix != null && m_saturationMatrix != null && m_hueMatrix != null);
 		}
 
 

@@ -241,9 +241,9 @@ package com.probertson.utils
 			
 			// must throw an error if any of the remaining bits are non-zero
 			var flagsError:Boolean = false;
-			flagsError = ((flags >> 2) & 1 == 1) ? true : flagsError;
-			flagsError = ((flags >> 1) & 1 == 1) ? true : flagsError;
-			flagsError = (flags & 1 == 1) ? true : flagsError;
+			flagsError = ((flags >> 2) & 1) == 1 || flagsError;
+			flagsError = ((flags >> 1) & 1) == 1 || flagsError;
+			flagsError = (flags & 1) == 1 || flagsError;
 			if (flagsError)
 			{
 				throw new IllegalOperationError("The specified data is not in GZIP file format structure.");

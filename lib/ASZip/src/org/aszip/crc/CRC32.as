@@ -15,7 +15,7 @@ package org.aszip.crc
         private static function initLookupTable ():Array
 		{
 			
-			var polynomial:int = 0xEDB88320;
+			var polynomial:int = -306674912; // 0xEDB88320
             var CRC32Table:Array = new Array(256);
 			
 			var i:int = 256;

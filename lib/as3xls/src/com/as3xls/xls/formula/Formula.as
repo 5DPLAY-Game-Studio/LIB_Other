@@ -410,10 +410,10 @@ package com.as3xls.xls.formula {
 						} else {
 							row = _tokens.readShort() + 1;
 							col = _tokens.readByte();
-							if(row & 0x8000 != 0) {
+							if((row & 0x8000) != 0) {
 								col = myCol + col;
 							}
-							if(row & 0x4000 != 0) {
+							if((row & 0x4000) != 0) {
 								row = myRow + row;
 							}
 							row &= 0x3FFF;
@@ -699,10 +699,10 @@ package com.as3xls.xls.formula {
 						} else {
 							row = _tokens.readShort() + 1;
 							col = _tokens.readByte();
-							if(row & 0x8000 != 0) {
+							if((row & 0x8000) != 0) {
 								col = myCol + col;
 							}
-							if(row & 0x4000 != 0) {
+							if((row & 0x4000) != 0) {
 								row = myRow + row;
 							}
 							row &= 0x3FFF;

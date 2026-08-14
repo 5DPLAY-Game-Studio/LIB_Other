@@ -791,7 +791,7 @@ package com.as3xls.xls {
 		private function font2(r:Record, s:Sheet):void { }
 		
 		private function format(r:Record, s:Sheet):void {
-			var index:uint = NaN;
+			var index:Number = NaN;
 			if(version == BIFFVersion.BIFF4) {
 				r.data.position += 2;
 			} else if (version == BIFFVersion.BIFF8 || version == BIFFVersion.BIFF5){
