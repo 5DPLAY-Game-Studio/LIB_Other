@@ -47,9 +47,8 @@ public class RandomUtils {
      * @return 共享实例。
      */
     public static function get I():RandomUtils {
-        if (!_i) {
-            _i = new RandomUtils();
-        }
+        _i ||= new RandomUtils();
+
         return _i;
     }
 
